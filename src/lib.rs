@@ -27,6 +27,12 @@ pub mod trig {
     //! operations
     //!
     //! ## Type coercions
+    //! Type coercions between angle types aren't enabled by default. If you want to enable
+    //! type coercions by default, change your `mathlib` dependency line in `Cargo.toml` to:
+    //! ```toml
+    //! mathlib = {version = "*", features = ["auto-coerce"]}
+    //! ```
+    //!   
     //! Always remember that RHS is preferred over LHS. Let's take a look at a couple of cases:
     //! - `DegreeAngle<T>` + `RadianAngle<T>` = `RadianAngle<T>`
     //! - `RadianAngle<T>` + `DegreeAngle<T>` = `DegreeAngle<T>`
@@ -183,91 +189,105 @@ pub mod trig {
             DegreeAngle(self.0.into() / other.0.into())
         }
     }
+    #[cfg(feature = "auto-coerce")]
     impl Add<RadianAngle<f32>> for DegreeAngle<f32> {
         type Output = RadianAngle<f32>;
         fn add(self, other: RadianAngle<f32>) -> Self::Output {
             RadianAngle(self.0.to_radians() + other.0)
         }
     }
+    #[cfg(feature = "auto-coerce")]
     impl Add<RadianAngle<f64>> for DegreeAngle<f64> {
         type Output = RadianAngle<f64>;
         fn add(self, other: RadianAngle<f64>) -> Self::Output {
             RadianAngle(self.0.to_radians() + other.0)
         }
     }
+    #[cfg(feature = "auto-coerce")]
     impl Sub<RadianAngle<f32>> for DegreeAngle<f32> {
         type Output = RadianAngle<f32>;
         fn sub(self, other: RadianAngle<f32>) -> Self::Output {
             RadianAngle(self.0.to_radians() - other.0)
         }
     }
+    #[cfg(feature = "auto-coerce")]
     impl Sub<RadianAngle<f64>> for DegreeAngle<f64> {
         type Output = RadianAngle<f64>;
         fn sub(self, other: RadianAngle<f64>) -> Self::Output {
             RadianAngle(self.0.to_radians() - other.0)
         }
     }
+    #[cfg(feature = "auto-coerce")]
     impl Div<RadianAngle<f32>> for DegreeAngle<f32> {
         type Output = RadianAngle<f32>;
         fn div(self, other: RadianAngle<f32>) -> Self::Output {
             RadianAngle(self.0.to_radians() / other.0)
         }
     }
+    #[cfg(feature = "auto-coerce")]
     impl Div<RadianAngle<f64>> for DegreeAngle<f64> {
         type Output = RadianAngle<f64>;
         fn div(self, other: RadianAngle<f64>) -> Self::Output {
             RadianAngle(self.0.to_radians() / other.0)
         }
     }
+    #[cfg(feature = "auto-coerce")]
     impl Mul<RadianAngle<f32>> for DegreeAngle<f32> {
         type Output = RadianAngle<f32>;
         fn mul(self, other: RadianAngle<f32>) -> Self::Output {
             RadianAngle(self.0.to_radians() * other.0)
         }
     }
+    #[cfg(feature = "auto-coerce")]
     impl Mul<RadianAngle<f64>> for DegreeAngle<f64> {
         type Output = RadianAngle<f64>;
         fn mul(self, other: RadianAngle<f64>) -> Self::Output {
             RadianAngle(self.0.to_radians() * other.0)
         }
     }
-
+    #[cfg(feature = "auto-coerce")]
     impl Add<DegreeAngle<f32>> for RadianAngle<f32> {
         type Output = DegreeAngle<f32>;
         fn add(self, other: DegreeAngle<f32>) -> Self::Output {
             DegreeAngle(self.0.to_degrees() + other.0)
         }
     }
+    #[cfg(feature = "auto-coerce")]
     impl Add<DegreeAngle<f64>> for RadianAngle<f64> {
         type Output = DegreeAngle<f64>;
         fn add(self, other: DegreeAngle<f64>) -> Self::Output {
             DegreeAngle(self.0.to_degrees() + other.0)
         }
     }
+    #[cfg(feature = "auto-coerce")]
     impl Sub<DegreeAngle<f32>> for RadianAngle<f32> {
         type Output = DegreeAngle<f32>;
         fn sub(self, other: DegreeAngle<f32>) -> Self::Output {
             DegreeAngle(self.0.to_degrees() - other.0)
         }
     }
+    #[cfg(feature = "auto-coerce")]
     impl Sub<DegreeAngle<f64>> for RadianAngle<f64> {
         type Output = DegreeAngle<f64>;
         fn sub(self, other: DegreeAngle<f64>) -> Self::Output {
             DegreeAngle(self.0.to_degrees() - other.0)
         }
     }
+    #[cfg(feature = "auto-coerce")]
     impl Div<DegreeAngle<f32>> for RadianAngle<f32> {
         type Output = DegreeAngle<f32>;
         fn div(self, other: DegreeAngle<f32>) -> Self::Output {
             DegreeAngle(self.0.to_degrees() / other.0)
         }
     }
+    #[cfg(feature = "auto-coerce")]
     impl Mul<DegreeAngle<f32>> for RadianAngle<f32> {
         type Output = DegreeAngle<f32>;
         fn mul(self, other: DegreeAngle<f32>) -> Self::Output {
             DegreeAngle(self.0.to_degrees() * other.0)
         }
     }
+    #[cfg(feature = "auto-coerce")]
     impl Mul<DegreeAngle<f64>> for RadianAngle<f64> {
         type Output = DegreeAngle<f64>;
         fn mul(self, other: DegreeAngle<f64>) -> Self::Output {
@@ -283,21 +303,5 @@ pub mod trig {
         let three_pi_by_two = pi_by_two + pi;
         let two_seventy = DegreeAngle(270.0);
         assert_eq!(three_pi_by_two, two_seventy);
-    }
-    #[test]
-    fn test_deg_rad_arithmetic() {
-        let pi_by_two = RadianAngle(0.5 * PI32);
-        let ninety = DegreeAngle(90.0);
-        // RHS has preference over LHS, so the resulting angle is a `RadianAngle`
-        let straight_angle = ninety + pi_by_two;
-        assert_eq!(PI32, straight_angle.into_rad());
-    }
-    #[test]
-    fn test_rad_deg_arithmetic() {
-        let pi_by_two = RadianAngle(0.5 * PI32);
-        let ninety = DegreeAngle(90.0);
-        // RHS has preference over LHS, so the resulting angle is a `DegreeAngle`
-        let straight_angle = pi_by_two + ninety;
-        assert_eq!(180.0, straight_angle.into_deg());
     }
 }
