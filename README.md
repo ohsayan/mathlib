@@ -1,4 +1,9 @@
-# `mathlib`
+<span style="text-align: center">
+ <h1><code>mathlib</code></h1>
+
+![Status: Alpha](https://img.shields.io/badge/status-WIP-critical?style=flat-square) ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/ohsayan/mathlib/Rust/next) ![Crates.io](https://img.shields.io/crates/v/mathlib) [![docs.rs](https://img.shields.io/badge/docs.rs-docs-blue)](https://docs.rs/mathlib)
+
+</span>
 
 ## Introduction
 
